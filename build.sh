@@ -28,8 +28,11 @@ PYTHON="${PYTHON:-$(command -v python3 || command -v python)}"
 # CMake on Windows wants C:/ paths, not Git Bash's /c/
 native() { if command -v cygpath >/dev/null; then cygpath -m "$1"; else echo "$1"; fi; }
 
-if [ ! -f edgetx/CMakeLists.txt ] || [ ! -f elrs/ExpressLRS/src/platformio.ini ]; then
-  git submodule update --init --recursive
+# One level inside EdgeTX: FreeRTOS's own submodules (community ports) aren't
+# used, and on Windows their paths can be too long to check out.
+if [ ! -f edgetx/radio/src/thirdparty/FreeRTOS/tasks.c ] || [ ! -f elrs/ExpressLRS/src/platformio.ini ]; then
+  git submodule update --init
+  git -C edgetx submodule update --init
 fi
 if [ "$CLEAN" = 1 ]; then
   rm -rf build out loader/.pio elrs/build

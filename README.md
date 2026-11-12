@@ -32,13 +32,13 @@ Only one radio image runs at a time; they share the RAM at `0x20015000`-`0x2001F
 You need PlatformIO (`pio`), CMake, Ninja, and Python 3 with `requirements.txt` installed.
 
 ```bash
-git clone --recursive https://github.com/MUSTARDTIGERFPV/two-to-tango
+git clone https://github.com/MUSTARDTIGERFPV/two-to-tango
 cd two-to-tango
 pip install -r requirements.txt
 ./build.sh
 ```
 
-That leaves `loader.bin`, `edgetx.bin` and `elrs.bin` in `out/`. `./build.sh --phrase "my bind phrase"` bakes a bind phrase into the ELRS image; without it the image is unbound and you bind from the ELRS Lua (or let the web flasher set it).
+`build.sh` checks out the submodules it needs on the first run (not `--recursive`: FreeRTOS's own submodules aren't used, and their paths are too long for Windows). That leaves `loader.bin`, `edgetx.bin` and `elrs.bin` in `out/`. `./build.sh --phrase "my bind phrase"` bakes a bind phrase into the ELRS image; without it the image is unbound and you bind from the ELRS Lua (or let the web flasher set it).
 
 The loader build pulls PlatformIO's arm-none-eabi-gcc 9.2.1, and the other two builds use that same compiler. EdgeTX officially wants Arm GNU 14.2; this target has only been built and tested on 9.2.1 so far. Set `ARM_TOOLCHAIN_DIR` if you want to try another one. Builds on Windows (Git Bash) and Linux.
 

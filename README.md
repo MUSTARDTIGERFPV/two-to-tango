@@ -1,5 +1,8 @@
 # Two to Tango
 
+> [!WARNING]
+> This is very much beta. It works on my bench radio, but it hasn't been on many other Tango 2s yet, so expect rough edges. The TBS bootloader is never touched, so holding E and plugging in USB always gets you back to a place you can flash from. If something goes sideways, please open an issue and tell me what happened.
+
 EdgeTX for the TBS Tango 2, with TBS Crossfire *and* ExpressLRS resident in flash on the internal module. Pick the link per model in **Model Setup → Internal RF** (the second field on the Mode line, `ELRS` or `XFire`) and the radio swaps between them in about a second, no reboot.
 
 If you just want it on your radio, use the web flasher at [tools.mustardtiger.xyz/two-to-tango](https://tools.mustardtiger.xyz/two-to-tango/). This repo is for building it yourself.

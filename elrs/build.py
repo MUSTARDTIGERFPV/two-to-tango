@@ -17,8 +17,14 @@ ROOT = os.path.dirname(HERE)
 ELRS = os.path.join(HERE, "ExpressLRS", "src")
 PLAT = os.path.join(HERE, "platform")
 BUILD = os.path.join(HERE, "build")
-PKG = os.path.expanduser("~/.platformio/packages")
-GCC = os.path.join(PKG, "toolchain-gccarmnoneeabi", "bin", "arm-none-eabi-")
+# Compiler and CMSIS headers: build.sh passes the ones PlatformIO used for the
+# loader; the fallbacks are PlatformIO's default package locations.
+PKG = os.path.join(os.environ.get("PLATFORMIO_CORE_DIR") or os.path.expanduser("~/.platformio"), "packages")
+GCC = os.path.join(os.environ.get("ARM_TOOLCHAIN_DIR") or os.path.join(PKG, "toolchain-gccarmnoneeabi", "bin"),
+                   "arm-none-eabi-")
+CMSIS_CORE = os.environ.get("CMSIS_CORE_INCLUDE") or os.path.join(PKG, "framework-cmsis", "CMSIS", "Core", "Include")
+CMSIS_F4 = os.environ.get("CMSIS_F4_INCLUDE") or os.path.join(
+    PKG, "framework-arduinoststm32", "system", "Drivers", "CMSIS", "Device", "ST", "STM32F4xx", "Include")
 
 # ExpressLRS sources (the tango2 branch of the ExpressLRS submodule).
 ELRS_SRCS = [
@@ -65,8 +71,7 @@ def includes():
     for d in sorted(os.listdir(libdir)):
         if d not in LIB_EXCLUDE and os.path.isdir(os.path.join(libdir, d)):
             inc.append(os.path.join(libdir, d))
-    inc += [os.path.join(PKG, "framework-cmsis", "CMSIS", "Core", "Include"),
-            os.path.join(PKG, "framework-arduinoststm32", "system", "Drivers", "CMSIS", "Device", "ST", "STM32F4xx", "Include")]
+    inc += [CMSIS_CORE, CMSIS_F4]
     return inc
 
 

@@ -7,8 +7,9 @@
 #   ./build.sh [--phrase "bind phrase"] [--clean]
 #
 # Needs PlatformIO (pio), CMake, Ninja and Python 3 with requirements.txt. The
-# loader build installs PlatformIO's arm-none-eabi-gcc and CMSIS headers, and
-# the other two builds use those; set ARM_TOOLCHAIN_DIR to use another gcc.
+# loader build installs PlatformIO's arm-none-eabi-gcc 9.2.1 and CMSIS headers
+# (pinned in loader/platformio.ini), and the other two builds use those; set
+# ARM_TOOLCHAIN_DIR to use another gcc.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
@@ -42,13 +43,17 @@ mkdir -p out build
 echo "== loader"
 (cd loader && "$PIO" run -s)
 cp loader/.pio/build/loader/firmware.bin out/loader.bin
+# The other two builds use the compiler and CMSIS headers the loader just got
+TOOLCHAIN_OVERRIDE="${ARM_TOOLCHAIN_DIR:-}"
+eval "$("$PIO" project metadata -d loader -e loader --json-output | "$PYTHON" tools/pio_paths.py)"
+ARM_TOOLCHAIN_DIR="${TOOLCHAIN_OVERRIDE:-$ARM_TOOLCHAIN_DIR}"
 
 echo "== ExpressLRS image"
 "$PYTHON" elrs/build.py ${PHRASE[@]+"${PHRASE[@]}"}
 cp elrs/build/tango2-elrs.bin out/elrs.bin
 
 echo "== EdgeTX"
-ARM_BIN="${ARM_TOOLCHAIN_DIR:-$HOME/.platformio/packages/toolchain-gccarmnoneeabi/bin}"
+ARM_BIN="$ARM_TOOLCHAIN_DIR"
 B=build/edgetx
 if [ ! -f "$B/build.ninja" ]; then
   # EdgeTX asks for Arm GNU 14.2; this target is built and tested with

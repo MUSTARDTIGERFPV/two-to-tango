@@ -1,0 +1,8 @@
+# Python packages the EdgeTX build's code generators need
+asciitree
+jinja2
+lz4
+pillow
+pydantic
+pyelftools
+typing_extensions

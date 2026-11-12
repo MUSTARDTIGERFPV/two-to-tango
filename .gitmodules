@@ -1,0 +1,8 @@
+[submodule "edgetx"]
+	path = edgetx
+	url = https://github.com/MUSTARDTIGERFPV/edgetx.git
+	branch = tango2
+[submodule "elrs/ExpressLRS"]
+	path = elrs/ExpressLRS
+	url = https://github.com/MUSTARDTIGERFPV/ExpressLRS.git
+	branch = tango2
